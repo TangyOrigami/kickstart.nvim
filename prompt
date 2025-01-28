@@ -1,0 +1,31 @@
+1. **Add Auto-Start Option**: In your `opts` section under `model = ...`, include a new option:
+   ```lua
+   auto_start = false,
+   ```
+
+2. **Add KeyBinding**: In the keybindings, add a new entry to trigger starting Ollama.
+   ```lua
+   {
+     '<leader>oZ',
+     ":call('start_ollama')<cr>",
+     desc = 'Start Ollama Server',
+     mode = { 'n', 'v' },
+   },
+   ```
+
+3. **Create Macro Function**: In your plugin code, define a macro to start the server.
+   ```lua
+   function start_ollama()
+     require('ollama').start_server({
+       on_start = true,
+       command = 'ollama',
+       args = { serve = true },
+       stop_command = 'pkill',
+       stop_args = { command = 'ollama', args = { serve = true } }
+     })
+   end
+   ```
+
+4. **Ensure Termination**: After starting, provide a way to stop the server. You can add another keybinding or macro for stopping.
+
+With these changes, when you press `OllamaStart` (or your chosen key combination), it will automatically start the Ollama server with background processing enabled (`auto_run = true`).
